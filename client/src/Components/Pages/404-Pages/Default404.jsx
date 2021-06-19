@@ -1,7 +1,12 @@
+import "./Default404.scss";
+
 const Default404 = () => {
   return (
-    <div>
-      <h1>Default - 404</h1>
+    <div className="bg">
+      <div class="error">404</div>
+      <br />
+      <br />
+      <span class="info">File not found</span>
     </div>
   );
 };

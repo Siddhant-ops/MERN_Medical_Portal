@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const path = require("path");
 require("dotenv").config();
 
 const app = express();
@@ -20,11 +21,15 @@ mongoose
   .then(() => console.log("DB Connected Successfully"))
   .catch((err) => console.log(err));
 
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "client", "build")));
+}
+
 const auth = require("./Routes/auth");
-const search = require("./Routes/search");
+const patient = require("./Routes/patient");
 
 app.use("/api/auth", auth);
-app.use("/api/search", search);
+app.use("/api/patient", patient);
 
 const port = process.env.PORT || 5000;
 

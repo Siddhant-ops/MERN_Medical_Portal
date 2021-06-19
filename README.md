@@ -1,15 +1,59 @@
+# Hey yo welcome to my repo!
+
+## Ok so this is a MERN project.
+
+### Split up in 2 sections
+
+- MERN_Medical_Portal contains the Node-Express API.
+- client contains the react project.
+
+## Intructions to start
+
+### Install dependencies
+
+```bash
+npm i
+```
+
+### Production
+
+```bash
+npm start
+```
+
+### Development
+
+```bash
+npm run dev
+```
+
+## At the same time, start the react app, run the following command in root folder
+
+```bash
+cd client
+```
+
+```bash
+npm i
+```
+
+### To start react app
+
+```bash
+npm start
+```
+
+## Make sure to create a .env file in the root folder and add the environment variables
+
+```
+PORT=5000
+MONGODB_URI=UR MONGODB URI
+SECRET=UR SECRET
+```
+
+---
+
 # Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.\
 You will also see any lint errors in the console.

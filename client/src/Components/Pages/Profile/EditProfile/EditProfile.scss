@@ -1,0 +1,29 @@
+.noData__Container {
+  height: 90vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.Container {
+  width: 100%;
+  min-height: 80vh;
+  display: grid;
+  place-items: center;
+
+  .mainContainer {
+    width: 50%;
+    padding: 1.5rem;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .Container {
+    .mainContainer {
+      width: 100%;
+    }
+  }
+}

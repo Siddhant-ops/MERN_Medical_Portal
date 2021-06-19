@@ -1,11 +1,23 @@
+import { useHistory } from "react-router-dom";
+import axios from "axios";
 import "./PatientLogin.scss";
+import { useStateValue } from "../../../Utilities/stateProvider/stateProvider";
+import { actionTypes } from "../../../Utilities/reducer/reducer";
 import img from "../../../../Media/Images/Doctor-patient.svg";
-import { Form, Input, Button, Row, Col, Grid } from "antd";
+import { Form, Input, Button, Row, Col, Grid, message } from "antd";
 import Checkbox from "antd/lib/checkbox/Checkbox";
 
 const PatientLogin = () => {
+  // dispatch to set user token
+  const [{}, dispatch] = useStateValue();
+
+  // md is boolean for medium breakpoint
   const { md } = Grid.useBreakpoint();
 
+  // using router history
+  const history = useHistory();
+
+  // Stating a basic layout
   const layout = {
     labelCol: { span: 4 },
     wrapperCol: { span: 16 },
@@ -14,8 +26,29 @@ const PatientLogin = () => {
     wrapperCol: { offset: 4, span: 16 },
   };
 
+  // on form submit
   const onFinish = (values) => {
-    console.log("Success:", values);
+    const data = {
+      email: values.email,
+      password: values.password,
+    };
+
+    axios
+      .post("/api/auth/login/patient", data)
+      .then((res) => {
+        if (res.status === 200 && res.data?.token) {
+          dispatch({
+            type: actionTypes.SET_USER,
+            user: res.data.token,
+          });
+          message.success("Success");
+          localStorage.setItem("Ajackus_user", res.data?.token);
+          history.push("/patient/profile/Self");
+        } else {
+          message.error("Error");
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -25,7 +58,7 @@ const PatientLogin = () => {
   return (
     <div className="patientLogin__Container">
       <Row>
-        <Col style={{ padding: "2rem" }} span={md ? 12 : 24}>
+        <Col className="patientLogin__Col1" span={md ? 12 : 24}>
           <div className="login__Container">
             <h3>Patient Login</h3>
             <Form

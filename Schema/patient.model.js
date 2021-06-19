@@ -9,7 +9,6 @@ const patientSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
       default: "Healthcare",
     },
     fullName: {

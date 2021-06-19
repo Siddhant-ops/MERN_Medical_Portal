@@ -1,19 +1,23 @@
-import "./DoctorLogin.scss";
-import img from "../../../../Media/Images/Doctor-lab.svg";
-import { Form, Input, Button, Row, Col, Grid } from "antd";
-import Checkbox from "antd/lib/checkbox/Checkbox";
 import axios from "axios";
-import { useStateValue } from "../../../Utilities/stateProvider/stateProvider";
-import { actionTypes } from "../../../Utilities/reducer/reducer";
 import { useHistory } from "react-router-dom";
+import { actionTypes } from "../../../Utilities/reducer/reducer";
+import { useStateValue } from "../../../Utilities/stateProvider/stateProvider";
+import "./DoctorLogin.scss";
+import { Form, Input, Button, Row, Col, Grid, message } from "antd";
+import Checkbox from "antd/lib/checkbox/Checkbox";
+import img from "../../../../Media/Images/Doctor-lab.svg";
 
 const DoctorLogin = () => {
-  const [{ user }, dispatch] = useStateValue();
+  // dispatch to set user token
+  const [{}, dispatch] = useStateValue();
 
+  // md is boolean for medium breakpoint
   const { md } = Grid.useBreakpoint();
 
+  // using router history
   const history = useHistory();
 
+  // Stating a basic layout
   const layout = {
     labelCol: { span: 4 },
     wrapperCol: { span: 16 },
@@ -22,6 +26,7 @@ const DoctorLogin = () => {
     wrapperCol: { offset: 4, span: 16 },
   };
 
+  // on form submit
   const onFinish = (values) => {
     const data = {
       email: values.email,
@@ -36,15 +41,14 @@ const DoctorLogin = () => {
             type: actionTypes.SET_USER,
             user: res.data.token,
           });
+          message.success("Success");
           localStorage.setItem("Ajackus_user", res.data?.token);
           history.push("/doctor/dashboard");
+        } else {
+          message.error("Error");
         }
       })
-      .catch((err) => console.log(err));
-  };
-
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+      .catch((err) => message.error(err.message));
   };
 
   return (
@@ -53,7 +57,7 @@ const DoctorLogin = () => {
         <Col span={md ? 12 : 24}>
           <img src={img} alt="" />
         </Col>
-        <Col style={{ padding: "2rem" }} span={md ? 12 : 24}>
+        <Col className="doctorLogin__Col1" span={md ? 12 : 24}>
           <div className="login__Container">
             <h3>Doctor Login</h3>
             <Form
@@ -61,7 +65,6 @@ const DoctorLogin = () => {
               name="basic"
               initialValues={{ remember: true }}
               onFinish={onFinish}
-              onFinishFailed={onFinishFailed}
             >
               <Form.Item
                 label="Email"

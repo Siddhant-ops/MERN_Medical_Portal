@@ -326,7 +326,7 @@ router.post(
       });
     } else {
       const email = req.body.email;
-      doctorSchema.findOne(
+      patientSchema.findOne(
         {
           email: email,
         },
@@ -348,6 +348,7 @@ router.post(
               if (isMatch) {
                 const PAYLOAD = {
                   email: doc.email,
+                  _id: doc._id,
                   role: "patient",
                 };
 

@@ -1,18 +1,26 @@
+import { useState } from "react";
+import { NavLink, useHistory } from "react-router-dom";
+import { actionTypes } from "../../Utilities/reducer/reducer";
+import { useStateValue } from "../../Utilities/stateProvider/stateProvider";
+import { parseJwt } from "../../Utilities/Helpers/Helper";
 import { Menu, Grid, Button, Drawer } from "antd";
-import { NavLink } from "react-router-dom";
 import "./Navbar.scss";
 import "antd/dist/antd.css";
 import SubMenu from "antd/lib/menu/SubMenu";
-import { useState } from "react";
-import { useStateValue } from "../../Utilities/stateProvider/stateProvider";
-import { parseJwt } from "../../Utilities/Helpers/Helper";
 
 const Navbar = () => {
-  const [{ user }] = useStateValue();
+  // get user token and dispatch function to set user
+  const [{ user }, dispatch] = useStateValue();
 
+  // get router history
+  const history = useHistory();
+
+  // md is boolean for medium breakpoint
   const { md } = Grid.useBreakpoint();
 
+  // Nav mobile drawer state
   const [visible, setVisible] = useState(false);
+
   const showDrawer = () => {
     setVisible(true);
   };
@@ -20,10 +28,20 @@ const Navbar = () => {
     setVisible(false);
   };
 
+  // Log out and remove user from localStrorage and redirect to home page
+  function logOut() {
+    dispatch({
+      type: actionTypes.SET_USER,
+      user: null,
+    });
+    localStorage.removeItem("Ajackus_user");
+    history.replace("/");
+  }
+
   const NavMenu = ({ md }) => {
     return (
       <Menu mode={md ? "horizontal" : "inline"}>
-        {user && parseJwt(user)["role"] === "doctor" ? (
+        {user && parseJwt(user)["role"] === "doctor" && (
           <Menu.Item key="dashboard">
             <NavLink
               to={`/${parseJwt(user)["role"]}/dashboard/`}
@@ -32,7 +50,8 @@ const Navbar = () => {
               Dashboard
             </NavLink>
           </Menu.Item>
-        ) : (
+        )}
+        {!user && (
           <SubMenu key="loginMenu" title="Login">
             <Menu.Item key="LoginDoctor">
               <NavLink to="/login/doctor">Login-Doctor</NavLink>
@@ -42,24 +61,27 @@ const Navbar = () => {
             </Menu.Item>
           </SubMenu>
         )}
-        <Menu.Item key="about">
-          <NavLink to="/" activeClassName="navbarLink__Active">
-            About
-          </NavLink>
-        </Menu.Item>
-        <Menu.Item key="contact">
-          <NavLink to="/" activeClassName="navbarLink__Active">
-            Contact
-          </NavLink>
-        </Menu.Item>
-        {user && (
+        {user && parseJwt(user)["role"] === "patient" && (
           <Menu.Item key="profile">
             <NavLink
-              to={`/${parseJwt(user)["role"]}/profile/`}
+              to="/patient/profile/Self"
               activeClassName="navbarLink__Active"
             >
               Profile
             </NavLink>
+          </Menu.Item>
+        )}
+        {user && (
+          <Menu.Item key="logOut">
+            <Button
+              onClick={() => {
+                logOut();
+              }}
+              type="primary"
+              size="middle"
+            >
+              Log Out
+            </Button>
           </Menu.Item>
         )}
       </Menu>

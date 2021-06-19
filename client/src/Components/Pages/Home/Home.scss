@@ -1,7 +1,7 @@
 $font-color: #14215e;
 
 .home__Container {
-  height: 100vh;
+  min-height: 100vh;
   padding: 1rem;
   background: url("../../../Media/Images/Home/Home.png") no-repeat;
   background-size: cover;
@@ -58,16 +58,18 @@ $font-color: #14215e;
       width: 100%;
     }
   }
+}
 
-  // & > h2 {
-  //   text-align: center;
-  // }
-
-  // .home__Row2 {
-  //   width: 80%;
-  //   margin: 1rem auto;
-  //   display: flex;
-  //   justify-content: space-around;
-  //   align-items: center;
-  // }
+@media only screen and (max-width: 600px) {
+  .home__Container {
+    .home__intro {
+      gap: 1.5rem !important;
+      flex-direction: column-reverse;
+      .home__intro__Col1 {
+        .home__intro__text {
+          width: 100%;
+        }
+      }
+    }
+  }
 }

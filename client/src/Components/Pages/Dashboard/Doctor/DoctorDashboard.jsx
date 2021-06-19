@@ -1,3 +1,13 @@
+import { useState, Fragment } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { useStateValue } from "../../../Utilities/stateProvider/stateProvider";
+import "./DoctorDashboard.scss";
+import {
+  diagnosisList,
+  medPrescribed,
+  symptomsList,
+} from "../../../Utilities/Helpers/Helper";
 import {
   Button,
   Input,
@@ -6,129 +16,91 @@ import {
   Row,
   Col,
   Grid,
-  List,
-  Divider,
+  BackTop,
+  Empty,
 } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-import "./DoctorDashboard.scss";
-import {
-  diagnosisList,
-  medPrescribed,
-  symptomsList,
-} from "../../../Utilities/Helpers/Helper";
-import { NavLink } from "react-router-dom";
-import { Fragment, useState } from "react";
 
-const ResultItem = () => {
-  const [viewMore, setViewMore] = useState(false);
-
+const ResultItem = (post, index) => {
   return (
-    <div className="results__Item">
+    <div key={index} className="results__Item">
       <span className="horizontalDiv">
-        <h4>Name : Siddhant Dalvi</h4>
-        <NavLink to="/">Visit Profile</NavLink>
-        <Button
-          size="small"
-          onClick={() => {
-            setViewMore((prevViewMore) => !prevViewMore);
-          }}
-        >
-          View More
-        </Button>
+        <h4>Name : {post?.fullName}</h4>
+        <Link to={`/patient/pro/${post?._id}`}>Visit Profile</Link>
       </span>
       <span className="horizontalDiv">
-        <h5>Phone : 1234567890</h5>
-        <h5>Email : siddhantdalvi3@gmail.com</h5>
+        <h5>Phone : {post?.phone}</h5>
+        <h5>Email : {post?.email}</h5>
       </span>
-      {viewMore && (
-        <Fragment>
-          <Divider orientation="left">Symptoms</Divider>
-          <List
-            size="small"
-            bordered
-            dataSource={data}
-            renderItem={(item) => <List.Item>{item}</List.Item>}
-          />
-          <Divider orientation="left">Prescribed medication</Divider>
-          <List
-            size="small"
-            bordered
-            dataSource={data}
-            renderItem={(item) => <List.Item>{item}</List.Item>}
-          />
-          <Divider orientation="left">Diagnosis</Divider>
-          <List
-            size="small"
-            bordered
-            dataSource={data}
-            renderItem={(item) => <List.Item>{item}</List.Item>}
-          />
-        </Fragment>
-      )}
     </div>
   );
 };
 
-const data = [
-  "Racing car sprays burning fuel into crowd.",
-  "Japanese princess to wed commoner.",
-  "Australian walks 100km after outback crash.",
-  "Man charged over missing wedding girl.",
-  "Los Angeles battles huge wildfires.",
-];
 const DoctorDashboard = () => {
+  const [{ user }] = useStateValue();
+
   const [form] = Form.useForm();
   const { md } = Grid.useBreakpoint();
 
-  const [showCreatePatient, setShowCreatePatient] = useState(false);
+  const [data, setData] = useState(null);
 
-  const onSearch = () => {};
+  function onFinish(e) {
+    const config = {
+      headers: { Authorization: `Bearer ${user}` },
+    };
+
+    axios
+      .post("/api/patient/searchAll", e, config)
+      .then((res) => {
+        if (res.status === 200 && res.data[0]?.fullName) {
+          setData(res.data);
+        }
+      })
+      .catch((err) => console.log(err));
+  }
 
   return (
-    <div className="dashboard__Container">
-      <Row>
-        <Col span={md ? "8" : "24"}>
-          <h3>Search patients</h3>
-          <Form
-            layout="vertical"
-            form={form}
-            onFinish={(e) => {
-              console.log(e);
-            }}
-            className="dashboard__searchContainer"
-          >
-            <Form.Item name="name" label="Name">
-              <Input
-                size="large"
-                placeholder="FirstName LastName"
-                prefix={<UserOutlined />}
-              />
-            </Form.Item>
-            <Form.Item name="symptoms" label="Symptoms">
-              <Select mode="multiple" size="large" placeholder="Symptoms">
-                {symptomsList.map((symptom) => (
-                  <Select.Option key={symptom}>{symptom}</Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              name="prescribedMedication"
-              label="Prescribed medication"
-            >
-              <Select mode="multiple" size="large" placeholder="Medication">
-                {medPrescribed.map((meds) => (
-                  <Select.Option key={meds}>{meds}</Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-            <Form.Item name="diagnosis" label="Diagnosis">
-              <Select mode="multiple" size="large" placeholder="Diagnosis">
-                {diagnosisList.map((item) => (
-                  <Select.Option key={item}>{item}</Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-            <Form.Item>
+    <Row className="dashboard__Container">
+      <Col span={md ? "8" : "24"}>
+        <h3>Search patients</h3>
+        <Form
+          layout="vertical"
+          form={form}
+          onFinish={(e) => {
+            onFinish(e);
+          }}
+          className="dashboard__searchContainer"
+        >
+          <Form.Item name="name" label="Name">
+            <Input
+              size="large"
+              placeholder="FirstName LastName"
+              prefix={<UserOutlined />}
+            />
+          </Form.Item>
+          <Form.Item name="symptoms" label="Symptoms">
+            <Select mode="multiple" size="large" placeholder="Symptoms">
+              {symptomsList.map((symptom) => (
+                <Select.Option key={symptom}>{symptom}</Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item name="prescribedMedication" label="Prescribed medication">
+            <Select mode="multiple" size="large" placeholder="Medication">
+              {medPrescribed.map((meds) => (
+                <Select.Option key={meds}>{meds}</Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item name="diagnosis" label="Diagnosis">
+            <Select mode="multiple" size="large" placeholder="Diagnosis">
+              {diagnosisList.map((item) => (
+                <Select.Option key={item}>{item}</Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item>
+            <span className="horizontalDiv">
               <Button
                 type="primary"
                 size="large"
@@ -137,14 +109,30 @@ const DoctorDashboard = () => {
               >
                 Search
               </Button>
-            </Form.Item>
-          </Form>
-        </Col>
-        <Col span={md ? "12" : "24"}>
-          <div className="results__Container">{ResultItem()}</div>
-        </Col>
-      </Row>
-    </div>
+              <Link to="/patient/pro/create">
+                <Button shape="round" size="large" type="dashed">
+                  Create new Patient
+                </Button>
+              </Link>
+            </span>
+          </Form.Item>
+        </Form>
+      </Col>
+      <Col span={md ? "12" : "24"}>
+        {data !== null ? (
+          <Fragment>
+            <BackTop />
+            <div className="results__Container">
+              {data.map((post, index) => ResultItem(post, index))}
+            </div>
+          </Fragment>
+        ) : (
+          <div className="noData__Container">
+            <Empty />
+          </div>
+        )}
+      </Col>
+    </Row>
   );
 };
 
