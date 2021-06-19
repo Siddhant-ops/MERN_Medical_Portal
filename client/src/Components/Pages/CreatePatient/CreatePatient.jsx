@@ -7,9 +7,11 @@ import {
 import { Form, Input, Select, Button, message } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { useStateValue } from "../../Utilities/stateProvider/stateProvider";
+import { useHistory } from "react-router-dom";
 
 const CreatePatient = () => {
   const [{ user }] = useStateValue();
+  const history = useHistory();
 
   const [form] = Form.useForm();
 
@@ -39,6 +41,9 @@ const CreatePatient = () => {
       .then((res) => {
         if (res.status === 200 && res.data?.message) {
           message.success(res.data?.message);
+          setTimeout(() => {
+            history.push("/doctor/dashboard");
+          }, 2000);
         } else {
           message.error("Some Error!");
         }
@@ -95,7 +100,12 @@ const CreatePatient = () => {
             <Input size="large" htmlType="tel" placeholder="abc@xyz.com" />
           </Form.Item>
           <Form.Item
-            rules={[{ required: true, message: "PLease fill this field" }]}
+            rules={[
+              {
+                required: true,
+                message: "PLease fill this field",
+              },
+            ]}
             name="password"
             label="Password"
           >

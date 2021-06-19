@@ -5,7 +5,6 @@ import { useStateValue } from "../../../Utilities/stateProvider/stateProvider";
 import { actionTypes } from "../../../Utilities/reducer/reducer";
 import img from "../../../../Media/Images/Doctor-patient.svg";
 import { Form, Input, Button, Row, Col, Grid, message } from "antd";
-import Checkbox from "antd/lib/checkbox/Checkbox";
 
 const PatientLogin = () => {
   // dispatch to set user token
@@ -91,15 +90,6 @@ const PatientLogin = () => {
               >
                 <Input.Password />
               </Form.Item>
-
-              <Form.Item
-                {...tailLayout}
-                name="remember"
-                valuePropName="checked"
-              >
-                <Checkbox>Remember me</Checkbox>
-              </Form.Item>
-
               <Form.Item {...tailLayout}>
                 <Button type="primary" htmlType="submit">
                   Submit

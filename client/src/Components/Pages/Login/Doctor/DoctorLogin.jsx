@@ -4,7 +4,6 @@ import { actionTypes } from "../../../Utilities/reducer/reducer";
 import { useStateValue } from "../../../Utilities/stateProvider/stateProvider";
 import "./DoctorLogin.scss";
 import { Form, Input, Button, Row, Col, Grid, message } from "antd";
-import Checkbox from "antd/lib/checkbox/Checkbox";
 import img from "../../../../Media/Images/Doctor-lab.svg";
 
 const DoctorLogin = () => {
@@ -88,14 +87,6 @@ const DoctorLogin = () => {
                 ]}
               >
                 <Input.Password />
-              </Form.Item>
-
-              <Form.Item
-                {...tailLayout}
-                name="remember"
-                valuePropName="checked"
-              >
-                <Checkbox>Remember me</Checkbox>
               </Form.Item>
 
               <Form.Item {...tailLayout}>
