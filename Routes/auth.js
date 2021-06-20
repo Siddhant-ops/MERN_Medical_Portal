@@ -133,21 +133,6 @@ router.post(
             }
           });
       }),
-    body("password")
-      .isLength({
-        min: 8,
-      })
-      .withMessage("Password must be atleast of 8 characters")
-      .matches(/[a-zA-Z]/)
-      .withMessage("must contain alphabets")
-      .matches(/[A-Z]/)
-      .withMessage("must contain one Uppercase Alphabet")
-      .matches(/[a-z]/)
-      .withMessage("must contain one Lowercase Alphabet"),
-    // .matches(/\d/)
-    // .withMessage("must contain a number")
-    // .matches(/[!@#$%^&*()\\]/)
-    // .withMessage("must contain a special character"),
     body("fullName")
       .isString()
       .custom((value) => {

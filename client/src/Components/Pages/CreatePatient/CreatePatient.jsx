@@ -99,16 +99,7 @@ const CreatePatient = () => {
           >
             <Input size="large" htmlType="tel" placeholder="abc@xyz.com" />
           </Form.Item>
-          <Form.Item
-            rules={[
-              {
-                required: true,
-                message: "PLease fill this field",
-              },
-            ]}
-            name="password"
-            label="Password"
-          >
+          <Form.Item name="password" label="Password">
             <Input size="large" htmlType="tel" placeholder="abc@xyz.com" />
           </Form.Item>
           <Form.Item name="symptoms" label="Symptoms">
